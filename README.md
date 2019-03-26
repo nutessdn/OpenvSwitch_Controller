@@ -18,34 +18,49 @@ Já no caso do OVSDB seja localmente ou remoto necessita direcionar com o protoc
 
 
 No Floodligth o acesso ao controlador pode ser totalmente gerenciado utilizando __Curl__.
+_Este envia documentos/arquivos para um servidor, fazendo uso de qualquer protocolo suportado, as chamadas ou requesições podem utilizar métodos GET, POST, PUT, DELETE cada comando fornece as possibilidades._
 
+|GET|
+----
       curl http://<controller-ip>:8080/wm/device/
 -> Lista todos dispositivos conectados ao controlador, retorna um JSON.
 
 Para ajudar na visualização dos dados obtidos podemos usar um conversor JSON, que fará a organização do resultado:
 
+|GET|POST|
+----|----   
+
       curl http://<controller-ip>:8080/wm/core/controller/switches/json | python -m json.tool
 -> Retorna o endereço ao qual os switches estão endereçados, a versão do OpenFlow, e a identificação.
-
+|GET|
+----  
       curl http://<controller-ip>:8080/wm/core/memory/json  
 -> Retorna a memória utilizada pelo controlador
 
+|GET|
+----
       curl http://<controller-ip>:8080/wm/core/health/json
 -> Status e integridade da REST API
-
+|GET|
+----
       curl http://<controller-ip>:8080/wm/core/version/json
 -> Versão e nome
-
+|GET|
+----
       curl http://<controller-ip>:8080/wm/core/system/uptime/json
 -> Tempo em atividade
-
+|GET|
+----
       curl http://<controller-ip>:8080/wm/core/storage/tables/json
 -> Retorna as tabelas contidas no armazenamento
-
-      curl http://<controller-ip>:8080//wm/core/switch/all/role/json
+|GET|
+----
+      curl http://<controller-ip>:8080/wm/core/switch/all/role/json
 -> Retorna todas as regras aplicadas aos switchs conectados
+|GET|POST|
+----|----   
 
-      curl http://<controller-ip>:8080//wm/core/switch/all/role/json {"role":"<nova_regra>"} nova_regra: "MASTER", "SLAVE", or "EQUAL"
+      curl http://<controller-ip>:8080/wm/core/switch/all/role/json -X POST -d {"role":"<nova_regra>"}  _nova_regra: "MASTER", "SLAVE", or "EQUAL"_
 -> Atribui a regra <nova_regra> aos switchs conectados
 
 Substituindo o **all** pelo ID específico do switch, os dois ultimos comandos retornam o contexto único:
