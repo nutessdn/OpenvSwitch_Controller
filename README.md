@@ -23,7 +23,7 @@ No Floodligth o acesso ao controlador pode ser totalmente gerenciado utilizando 
 _Este envia documentos/arquivos para um servidor, fazendo uso de qualquer protocolo suportado, as chamadas ou requesições podem utilizar métodos GET, POST, PUT, DELETE cada comando da API fornece as possibilidades._
 
 |GET|
----- 
+----|
       curl http://<controller-ip>:8080/wm/device/
 -> Lista todos dispositivos conectados ao controlador, retorna um JSON.
 
@@ -36,7 +36,7 @@ Para ajudar na visualização dos dados obtidos podemos usar um conversor JSON, 
 -> Retorna o endereço ao qual os switches estão endereçados, a versão do OpenFlow, e a identificação.
 
 |GET|
-----  
+----|  
       curl http://<controller-ip>:8080/wm/core/memory/json  
 -> Retorna a memória utilizada pelo controlador
 
@@ -135,13 +135,15 @@ Se deseja obter estatisticas e detalhes, utilize as opções, tanto para todos c
 É possível obter a performance do controlador e monitorar seu status:
 
 GET|
----
+---|
+
 curl http://<controller-ip>:8080/wm/performance/json
 
 Para que isto seja possível é necessário que o monitor de performance esteja ligado, faz-se isto com:
 
 POST|
----
+----|
+
 curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/enable/json
 
 curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/disable/json
@@ -150,7 +152,8 @@ curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/reset/json
 -> Restaura as configurações do monitor de performance
 
 GET|
----
+---|
+
 curl http://<controller-ip>:8080/wm/performance/data/json
 -> Recuperar o tempo médio de processamento de pacotes do controlador
 
