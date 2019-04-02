@@ -138,35 +138,73 @@ Se deseja obter estatisticas e detalhes, utilize as opções, tanto para todos c
 GET|
 ---|
 
-curl http://<controller-ip>:8080/wm/performance/json
+    curl http://<controller-ip>:8080/wm/performance/json
 
 Para que isto seja possível é necessário que o monitor de performance esteja ligado, faz-se isto com:
 
 POST|
 ----|
 
-curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/enable/json
+    curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/enable/json
 
-curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/disable/json
+    curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/disable/json
 
-curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/reset/json
+
+    curl -X POST -d ''  http://<controller-ip>:8080/wm/performance/reset/json
 -> Restaura as configurações do monitor de performance
 
 GET|
 ---|
 
-curl http://<controller-ip>:8080/wm/performance/data/json
+    curl http://<controller-ip>:8080/wm/performance/data/json
 -> Recuperar o tempo médio de processamento de pacotes do controlador
 
 ### Usando o vsctl
 
 O comando ovs-vsctl que possibilita a administração do switch em modo OpenFlow.
-Pode ser utilizado diretamente no switch, como também em consultas remotas.
+Pode ser utilizado diretamente no switch, como também em consultas remota.
+Nestes exemplos utilizamos consultas remotas, mas pelo fato da rede estar sendo emulada no próprio host, o endereço remoto sempre será o de loopback local:
 
+    sudo ovs-vsctl --db=ptcp:6640 show
 
+Neste exemplo temos uma consulta utilizando **ptcp** realizada ao **OVSDB**, passando como parâmetro a porta de comunicação e em seguida o comando desejado, nesse caso o **show**. Este mesmo poderia também ser executado localmente sem a utilização do parâmetro.
 
+Visto que, visamos explorar outros comandos remotamente, não iremos tratar de comandos básicos de configuração. Isto pode ser encontrado nos [comandos básicos](https://github.com/nutessdn/OVSwitch).
+
+#### QOS
+
+Podemos determinar QOS(Quality of Service), diretamente passando uma regra no vsctl,por default os fuxos estão condicinados a uma regra __0__, que é a prioridade máxima (enquanto menor o valor, maior a prioridade), mas  para isto necessita ser criada uma nova QOS:
+
+    sudo ovs-vsctl --db=ptcp:6640 set port s1-eth2 qos=@novaqos -- --id=@novaqos create qos type=linux-htb
+
+-> O comando retorna o ID da QOS
+Para criarmos uma nova QOS precisamos vincular essa nova configuração à uma porta,ex:**s1-eth2**, passando como parâmetro _qos=nome_da_qos -- --id=nome_da_qos create qos type=linux-htb_, para saber mais sobre os tipos de algoritmos [aplicados à QOS]().
+
+Para listar as QOS utilizamos:
+
+    sudo ovs-vsctl --db=ptcp:6640 list qos
+
+Ao criar uma QOS associada a uma porta, cria-se uma nova coluna referenciando a porta, por este motivo para excluirmos a QOS necessitamos limpar as configurações da porta:
+
+    sudo ovs-vsctl --db=ptcp:6640 clear port s1-eth2 qos
+
+-> Limpa as configurações de QOS associadas a porta.
+Feito isso podemos deletar a QOS:
+
+    sudo ovs-vsctl --db=ptcp:6640 --all destroy qos
+-> Deleta todas QOS associadas as portas que foram limpas as configurações de QOS.
+
+Agora podemos criar uma QOS para limitar ou priorizar uma largura de banda específica para a porta.
+
+sudo ovs-vsctl --db=ptcp:6640 set port s1-eth1 qos=@novaqos -- --id=@novaqos create qos type=linux-htb other-config:max-rate=50000000
+-> Cria uma nova QOS na porta s1-eth1 com uma largura de banda de 50Mb/s.
+
+Até o momento nada muda na prática, temos uma QOS vinculada a porta s1-eth1, porém para que o fluxo de dados ... 
 
 ---
 ### Fontes +
 
 [Fluxos estáticos](https://floodlight.atlassian.net/wiki/spaces/floodlightcontroller/pages/1343518/Static+Entry+Pusher+API) | [link2]()| [link3]()
+
+
+# Em Contrução
