@@ -1,7 +1,8 @@
 # Configurar o Open vSwitch com Controller
 
-_Este Tutorial tem como objetivo trazer os comandos utilizados na configuração do **Open vSwitch + Controller**, juntamente com o controlador escolhido gerenciar a rede criando novas configurações definindo padrões de fluxo e recuperando informações, como tais procedimentos podem ser realizados remotamente temos um ganho relevante no controle de redes globalmente distribuídas._
-### O que foi utilizado
+_Este Tutorial tem como objetivo trazer os comandos utilizados na configuração do **Open vSwitch + Controller**, o switch juntamente com o controlador escolhido gerenciar a rede criando novas configurações definindo padrões de fluxo e recuperando informações, como tais procedimentos podem ser realizados remotamente temos um ganho relevante no controle de redes globalmente distribuídas._
+
+### Recursos Utilizados
 Será utilizado um controlador **Floodligth** e o **Mininet** para emular uma rede com 1 switch Open vSwitch (__s1__) + 4 hosts (__h1, h2, h3, h4__).
 
 [Veja como utilizar o Mininet]()
@@ -159,7 +160,9 @@ curl http://<controller-ip>:8080/wm/performance/data/json
 
 ### Usando o vsctl
 
-O comando ovs-vsctl que possibilita a administração do switch em modo OpenFlow:
+O comando ovs-vsctl que possibilita a administração do switch em modo OpenFlow.
+Pode ser utilizado diretamente no switch, como também em consultas remotas.
+
 
 
 
